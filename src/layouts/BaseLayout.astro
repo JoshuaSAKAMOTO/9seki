@@ -1,4 +1,6 @@
 ---
+import LevelToggle from "@/components/LevelToggle.astro";
+
 interface Props {
   title: string;
   description?: string;
@@ -17,15 +19,26 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Inter:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      // FOUC防止: bodyレンダリング前にレベルクラスを付与
+      try {
+        if (localStorage.getItem("reading-level") === "advanced") {
+          document.documentElement.classList.add("level-advanced");
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <header class="site-header">
       <nav>
-        <a href="/" class="site-title">球析</a>
-        <span class="site-subtitle">9seki</span>
+        <a href="/" class="site-brand">
+          <span class="site-title">球析</span>
+          <span class="site-subtitle">9seki</span>
+        </a>
+        <LevelToggle />
       </nav>
     </header>
     <main>
@@ -44,8 +57,10 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
     --color-text-muted: #78716c;
     --color-accent: #2563eb;
     --color-border: #e7e5e4;
+    --color-surface: #ffffff;
     --font-sans: "Noto Sans JP", "Inter", system-ui, sans-serif;
     --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --font-num: "Inter", "JetBrains Mono", system-ui, sans-serif;
   }
 
   *,
@@ -77,29 +92,53 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
   a:hover {
     text-decoration: underline;
   }
+
+  h1, h2, h3, h4 {
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  p {
+    margin-block: 1em;
+  }
+
+  /* 数字用クラス */
+  .num {
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+  }
 </style>
 
 <style>
   .site-header {
-    padding: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    padding: 1.25rem 0;
     border-bottom: 1px solid var(--color-border);
     margin-bottom: 2rem;
   }
 
   .site-header nav {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .site-brand {
+    display: inline-flex;
     align-items: baseline;
     gap: 0.5rem;
+    color: inherit;
+  }
+
+  .site-brand:hover {
+    text-decoration: none;
   }
 
   .site-title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-text);
-  }
-
-  .site-title:hover {
-    text-decoration: none;
   }
 
   .site-subtitle {

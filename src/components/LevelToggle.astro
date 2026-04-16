@@ -1,0 +1,86 @@
+---
+/**
+ * 中級者 / 上級者の閲覧レベル切替トグル。
+ * ヘッダーに配置。localStorageに保存し、再訪時に復元される。
+ */
+---
+
+<button
+  id="level-toggle"
+  class="level-toggle"
+  type="button"
+  aria-label="読解レベル切替"
+>
+  <span class="label-intermediate">中級</span>
+  <span class="separator">/</span>
+  <span class="label-advanced">上級</span>
+</button>
+
+<script is:inline>
+  (() => {
+    const toggle = document.getElementById("level-toggle");
+    if (!toggle) return;
+
+    const apply = (level) => {
+      document.documentElement.classList.toggle(
+        "level-advanced",
+        level === "advanced"
+      );
+    };
+
+    toggle.addEventListener("click", () => {
+      const next = document.documentElement.classList.contains("level-advanced")
+        ? "intermediate"
+        : "advanced";
+      try {
+        localStorage.setItem("reading-level", next);
+      } catch (e) {}
+      apply(next);
+    });
+  })();
+</script>
+
+<style>
+  .level-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    transition: border-color 0.15s;
+  }
+
+  .level-toggle:hover {
+    border-color: var(--color-text-muted);
+  }
+
+  .label-intermediate {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .label-advanced {
+    color: var(--color-text-muted);
+  }
+
+  :global(html.level-advanced) .label-intermediate {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  :global(html.level-advanced) .label-advanced {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .separator {
+    color: var(--color-border);
+  }
+</style>

@@ -1,0 +1,172 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Advanced from "@/components/article/Advanced.astro";
+import Rewrite from "@/components/article/Rewrite.astro";
+import Metric from "@/components/article/Metric.astro";
+import StatCard from "@/components/article/StatCard.astro";
+import HBarChart from "@/components/charts/HBarChart.astro";
+
+export async function getStaticPaths() {
+  const articles = await getCollection(
+    "articles",
+    ({ data }) => data.status === "published"
+  );
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+
+const titleIntermediate = article.data.title.intermediate;
+const titleAdvanced = article.data.title.advanced ?? titleIntermediate;
+
+const typeLabel = {
+  "game-analysis": "試合分析",
+  "metric-explainer": "指標解説",
+  "weekly-recap": "週次まとめ",
+  "season-analysis": "シーズン分析",
+}[article.data.type];
+
+const components = { Advanced, Rewrite, Metric, StatCard, HBarChart };
+---
+
+<BaseLayout title={titleIntermediate} description={article.data.summary}>
+  <article class="article">
+    <header class="article-header">
+      <p class="article-type">{typeLabel}</p>
+      <h1 class="article-title">
+        <span class="t-intermediate">{titleIntermediate}</span>
+        <span class="t-advanced">{titleAdvanced}</span>
+      </h1>
+      <p class="article-summary">{article.data.summary}</p>
+      <div class="article-meta">
+        <time datetime={article.data.publishedAt.toISOString()}>
+          {article.data.publishedAt.toLocaleDateString("ja-JP")}
+        </time>
+      </div>
+    </header>
+
+    <div class="article-body">
+      <Content components={components} />
+    </div>
+
+    {
+      article.data.metrics.length > 0 && (
+        <footer class="article-footer">
+          <h2>言及された指標</h2>
+          <ul class="metric-list">
+            {article.data.metrics.map((id) => (
+              <li>
+                <a href={`/metrics/${id}`}>{id}</a>
+              </li>
+            ))}
+          </ul>
+        </footer>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .article-header {
+    padding: 1rem 0 2rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
+  }
+
+  .article-type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .article-title {
+    font-size: 1.625rem;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+  }
+
+  .t-advanced {
+    display: none;
+  }
+
+  :global(html.level-advanced) .t-intermediate {
+    display: none;
+  }
+
+  :global(html.level-advanced) .t-advanced {
+    display: inline;
+  }
+
+  .article-summary {
+    margin-top: 0.75rem;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.8;
+  }
+
+  .article-meta {
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  .article-body :global(h2) {
+    margin-top: 2.5rem;
+    font-size: 1.25rem;
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .article-body :global(h3) {
+    margin-top: 2rem;
+    font-size: 1.0625rem;
+  }
+
+  .article-body :global(p) {
+    line-height: 1.9;
+  }
+
+  .article-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .article-footer h2 {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .metric-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .metric-list a {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+
+  .metric-list a:hover {
+    border-color: var(--color-accent);
+    text-decoration: none;
+  }
+</style>

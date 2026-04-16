@@ -1,0 +1,139 @@
+---
+/**
+ * 横棒チャート。球種比較や選手比較など。
+ * 純SVG/HTMLで軽量。CSS変数で高さ・色を制御。
+ *
+ * 使い方:
+ * <HBarChart
+ *   title="球種別 Whiff%"
+ *   unit="%"
+ *   data={[
+ *     { label: "スプリッター", value: 42.1, highlight: true },
+ *     { label: "フォーシーム", value: 21.3 },
+ *     { label: "カーブ", value: 28.5 },
+ *   ]}
+ * />
+ */
+interface DataPoint {
+  label: string;
+  value: number;
+  highlight?: boolean;
+}
+
+interface Props {
+  title?: string;
+  unit?: string;
+  data: DataPoint[];
+  max?: number;
+  precision?: number;
+}
+
+const { title, unit = "", data, max, precision = 1 } = Astro.props;
+const scaleMax = max ?? Math.max(...data.map((d) => d.value)) * 1.05;
+const formatValue = (v: number) =>
+  precision > 0 ? v.toFixed(precision) : String(Math.round(v));
+---
+
+<figure class="hbar-chart">
+  {title && <figcaption class="hbar-title">{title}</figcaption>}
+  <ul class="hbar-list">
+    {
+      data.map((d) => (
+        <li class="hbar-row" data-highlight={d.highlight ? "true" : undefined}>
+          <span class="hbar-label">{d.label}</span>
+          <div class="hbar-track">
+            <div
+              class="hbar-fill"
+              style={`width: ${(d.value / scaleMax) * 100}%`}
+            />
+          </div>
+          <span class="hbar-value num">
+            {formatValue(d.value)}
+            {unit && <span class="hbar-unit">{unit}</span>}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</figure>
+
+<style>
+  .hbar-chart {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .hbar-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .hbar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .hbar-row {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr auto;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.8125rem;
+  }
+
+  .hbar-label {
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hbar-row[data-highlight="true"] .hbar-label {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .hbar-track {
+    height: 0.75rem;
+    background: transparent;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .hbar-fill {
+    height: 100%;
+    background: var(--color-border);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .hbar-row[data-highlight="true"] .hbar-fill {
+    background: var(--color-accent);
+  }
+
+  .hbar-value {
+    font-family: var(--font-num);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 3rem;
+    text-align: right;
+  }
+
+  .hbar-unit {
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    margin-left: 0.0625rem;
+  }
+</style>
