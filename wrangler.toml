@@ -5,7 +5,7 @@ compatibility_date = "2026-04-16"
 [[d1_databases]]
 binding = "DB"
 database_name = "9seki-db"
-database_id = "" # wrangler d1 create 9seki-db で取得後に設定
+database_id = "b3b4538f-8ee1-4968-adfe-da3c75c83d3e"
 
 [[r2_buckets]]
 binding = "DATA"
