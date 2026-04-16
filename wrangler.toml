@@ -1,0 +1,12 @@
+name = "9seki-api"
+main = "workers/index.ts"
+compatibility_date = "2026-04-16"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "9seki-db"
+database_id = "" # wrangler d1 create 9seki-db で取得後に設定
+
+[[r2_buckets]]
+binding = "DATA"
+bucket_name = "9seki-data"

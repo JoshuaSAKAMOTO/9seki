@@ -1,0 +1,123 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "球析 — 日本語MLBデータ分析メディア" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title} | 球析</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav>
+        <a href="/" class="site-title">球析</a>
+        <span class="site-subtitle">9seki</span>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>&copy; {new Date().getFullYear()} 球析 (9seki)</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --color-bg: #fafaf9;
+    --color-text: #1c1917;
+    --color-text-muted: #78716c;
+    --color-accent: #2563eb;
+    --color-border: #e7e5e4;
+    --font-sans: "Noto Sans JP", "Inter", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<style>
+  .site-header {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 2rem;
+  }
+
+  .site-header nav {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .site-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .site-title:hover {
+    text-decoration: none;
+  }
+
+  .site-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  main {
+    min-height: 60vh;
+    padding-bottom: 3rem;
+  }
+
+  .site-footer {
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+</style>

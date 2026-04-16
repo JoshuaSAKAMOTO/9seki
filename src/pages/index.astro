@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const articles = await getCollection("articles", ({ data }) => {
+  return data.status === "published";
+});
+
+const sortedArticles = articles.sort(
+  (a, b) =>
+    new Date(b.data.publishedAt).getTime() -
+    new Date(a.data.publishedAt).getTime()
+);
+---
+
+<BaseLayout title="トップ">
+  <section class="hero">
+    <h1>球析</h1>
+    <p class="tagline">データで読む、MLBの今。</p>
+  </section>
+
+  <section class="articles">
+    <h2>最新の分析</h2>
+    {
+      sortedArticles.length > 0 ? (
+        <ul class="article-list">
+          {sortedArticles.map((article) => (
+            <li class="article-item">
+              <a href={`/articles/${article.id}`}>
+                <span class="article-type" data-type={article.data.type}>
+                  {article.data.type === "game-analysis" && "試合分析"}
+                  {article.data.type === "metric-explainer" && "指標解説"}
+                  {article.data.type === "weekly-recap" && "週次まとめ"}
+                  {article.data.type === "season-analysis" && "シーズン分析"}
+                </span>
+                <h3>{article.data.title.intermediate}</h3>
+                <p class="article-summary">{article.data.summary}</p>
+                <time datetime={article.data.publishedAt.toISOString()}>
+                  {article.data.publishedAt.toLocaleDateString("ja-JP")}
+                </time>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty">記事を準備中です。</p>
+      )
+    }
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 3rem 0 2rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .tagline {
+    margin-top: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 1.125rem;
+  }
+
+  .articles h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .article-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .article-item a {
+    display: block;
+    color: inherit;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s;
+  }
+
+  .article-item a:hover {
+    background-color: var(--color-border);
+    text-decoration: none;
+  }
+
+  .article-type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .article-item h3 {
+    font-size: 1.125rem;
+    margin-top: 0.25rem;
+  }
+
+  .article-summary {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .article-item time {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .empty {
+    color: var(--color-text-muted);
+    padding: 2rem 0;
+  }
+</style>
