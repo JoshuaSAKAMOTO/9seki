@@ -9,7 +9,7 @@ import HBarChart from "@/components/charts/HBarChart.astro";
 export async function getStaticPaths() {
   const articles = await getCollection(
     "articles",
-    ({ data }) => data.status === "published"
+    ({ data }) => import.meta.env.DEV || data.status === "published"
   );
   return articles.map((article) => ({
     params: { slug: article.id },
