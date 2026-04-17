@@ -1,5 +1,5 @@
 name = "9seki-api"
-main = "workers/index.ts"
+main = "index.ts"
 compatibility_date = "2026-04-16"
 
 [[d1_databases]]
