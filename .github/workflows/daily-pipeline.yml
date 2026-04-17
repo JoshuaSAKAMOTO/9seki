@@ -1,0 +1,45 @@
+name: Daily Statcast Pipeline
+
+on:
+  schedule:
+    # 15:00 UTC = 00:00 JST (翌日0時)。前日分の試合データを取得。
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "Target date (YYYY-MM-DD). Leave blank for yesterday UTC."
+        required: false
+        type: string
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "scripts/pipeline/uv.lock"
+
+      - name: Sync dependencies
+        working-directory: scripts/pipeline
+        run: uv sync
+
+      - name: Run daily batch
+        working-directory: scripts/pipeline
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          D1_DATABASE_ID: ${{ vars.D1_DATABASE_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          if [ -n "${{ inputs.date }}" ]; then
+            uv run python -m pipeline daily --date "${{ inputs.date }}"
+          else
+            uv run python -m pipeline daily
+          fi

@@ -1,0 +1,15 @@
+[project]
+name = "9seki-pipeline"
+version = "0.1.0"
+description = "Daily Statcast data pipeline for 9seki"
+requires-python = ">=3.12"
+dependencies = [
+    "pybaseball>=2.2.7",
+    "pandas>=2.2",
+    "pyarrow>=18.0",
+    "boto3>=1.35",
+    "httpx>=0.27",
+]
+
+[tool.uv]
+package = false
