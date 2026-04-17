@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Advanced from "@/components/article/Advanced.astro";
-import Rewrite from "@/components/article/Rewrite.astro";
 import Metric from "@/components/article/Metric.astro";
 import StatCard from "@/components/article/StatCard.astro";
 import HBarChart from "@/components/charts/HBarChart.astro";
@@ -21,9 +20,6 @@ export async function getStaticPaths() {
 const { article } = Astro.props;
 const { Content } = await render(article);
 
-const titleIntermediate = article.data.title.intermediate;
-const titleAdvanced = article.data.title.advanced ?? titleIntermediate;
-
 const typeLabel = {
   "game-analysis": "試合分析",
   "metric-explainer": "指標解説",
@@ -31,17 +27,14 @@ const typeLabel = {
   "season-analysis": "シーズン分析",
 }[article.data.type];
 
-const components = { Advanced, Rewrite, Metric, StatCard, HBarChart };
+const components = { Advanced, Metric, StatCard, HBarChart };
 ---
 
-<BaseLayout title={titleIntermediate} description={article.data.summary}>
+<BaseLayout title={article.data.title} description={article.data.summary}>
   <article class="article">
     <header class="article-header">
       <p class="article-type">{typeLabel}</p>
-      <h1 class="article-title">
-        <span class="t-intermediate">{titleIntermediate}</span>
-        <span class="t-advanced">{titleAdvanced}</span>
-      </h1>
+      <h1 class="article-title">{article.data.title}</h1>
       <p class="article-summary">{article.data.summary}</p>
       <div class="article-meta">
         <time datetime={article.data.publishedAt.toISOString()}>
@@ -91,18 +84,6 @@ const components = { Advanced, Rewrite, Metric, StatCard, HBarChart };
     font-size: 1.625rem;
     line-height: 1.5;
     letter-spacing: 0.01em;
-  }
-
-  .t-advanced {
-    display: none;
-  }
-
-  :global(html.level-advanced) .t-intermediate {
-    display: none;
-  }
-
-  :global(html.level-advanced) .t-advanced {
-    display: inline;
   }
 
   .article-summary {

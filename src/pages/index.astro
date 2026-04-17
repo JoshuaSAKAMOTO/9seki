@@ -33,7 +33,7 @@ const sortedArticles = articles.sort(
                   {article.data.type === "weekly-recap" && "週次まとめ"}
                   {article.data.type === "season-analysis" && "シーズン分析"}
                 </span>
-                <h3>{article.data.title.intermediate}</h3>
+                <h3>{article.data.title}</h3>
                 <p class="article-summary">{article.data.summary}</p>
                 <time datetime={article.data.publishedAt.toISOString()}>
                   {article.data.publishedAt.toLocaleDateString("ja-JP")}

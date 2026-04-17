@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Advanced from "@/components/article/Advanced.astro";
-import Rewrite from "@/components/article/Rewrite.astro";
 import Metric from "@/components/article/Metric.astro";
 import StatCard from "@/components/article/StatCard.astro";
 import HBarChart from "@/components/charts/HBarChart.astro";
@@ -24,7 +23,7 @@ const levelLabel = {
   advanced: "上級",
 }[metric.data.level];
 
-const components = { Advanced, Rewrite, Metric, StatCard, HBarChart };
+const components = { Advanced, Metric, StatCard, HBarChart };
 ---
 
 <BaseLayout title={metric.data.nameJa} description={metric.data.shortDesc}>

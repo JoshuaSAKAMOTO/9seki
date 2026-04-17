@@ -4,10 +4,7 @@ import { glob } from "astro/loaders";
 const articles = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/articles" }),
   schema: z.object({
-    title: z.object({
-      intermediate: z.string(),
-      advanced: z.string().optional(),
-    }),
+    title: z.string(),
     summary: z.string(),
     type: z.enum([
       "game-analysis",

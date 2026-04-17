@@ -1,6 +1,4 @@
 ---
-import LevelToggle from "@/components/LevelToggle.astro";
-
 interface Props {
   title: string;
   description?: string;
@@ -22,14 +20,6 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <script is:inline>
-      // FOUC防止: bodyレンダリング前にレベルクラスを付与
-      try {
-        if (localStorage.getItem("reading-level") === "advanced") {
-          document.documentElement.classList.add("level-advanced");
-        }
-      } catch (e) {}
-    </script>
   </head>
   <body>
     <header class="site-header">
@@ -38,7 +28,6 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
           <span class="site-title">球析</span>
           <span class="site-subtitle">9seki</span>
         </a>
-        <LevelToggle />
       </nav>
     </header>
     <main>
@@ -102,7 +91,6 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
     margin-block: 1em;
   }
 
-  /* 数字用クラス */
   .num {
     font-family: var(--font-num);
     font-variant-numeric: tabular-nums;
