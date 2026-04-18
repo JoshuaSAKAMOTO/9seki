@@ -52,7 +52,7 @@ def draft(
     summary = data.summarise(df, inferred_role)
     stats_json = data.summary_as_json(summary)
 
-    print("Running Gemini Flash analysis...")
+    print("Running Claude Sonnet analysis...")
     findings = analyze.analyze_findings(
         cfg=cfg,
         topic=topic,
