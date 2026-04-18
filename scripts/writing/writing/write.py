@@ -17,6 +17,7 @@ def write_draft(
     end_date: str,
     stats_json: str,
     findings: str,
+    available_metrics: list[str],
 ) -> tuple[str, dict]:
     """
     Generate an MDX draft.
@@ -33,6 +34,7 @@ def write_draft(
         end_date=end_date,
         stats_json=stats_json,
         findings=findings,
+        available_metrics=available_metrics,
     )
 
     response = client.messages.create(

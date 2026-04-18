@@ -64,6 +64,9 @@ def draft(
     )
     print("  findings ready")
 
+    available_metrics = prompts.list_available_metrics()
+    print(f"  available metrics: {available_metrics}")
+
     print("Running Claude Sonnet draft...")
     mdx, usage = write.write_draft(
         cfg=cfg,
@@ -74,6 +77,7 @@ def draft(
         end_date=end.isoformat(),
         stats_json=stats_json,
         findings=findings,
+        available_metrics=available_metrics,
     )
 
     print(
