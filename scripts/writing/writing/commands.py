@@ -1,6 +1,6 @@
-"""Orchestration: data → Gemini findings → Claude draft → write MDX file."""
+"""Orchestration: data → Claude findings → Claude draft → write MDX file."""
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 from slugify import slugify
@@ -84,7 +84,10 @@ def draft(
     )
 
     if output is None:
-        slug_base = slugify(f"{player['name_en']} {topic} {end.isoformat()}")
+        # 日本語topicはslugify互換性が悪いのでファイル名には使わない。
+        # 題材は記事のtitle/frontmatter側に残る。
+        ts = datetime.now().strftime("%H%M")
+        slug_base = f"{slugify(player['name_en'])}-{end.isoformat()}-{ts}"
         DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
         output = DRAFTS_DIR / f"{slug_base}.mdx"
 
