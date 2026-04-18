@@ -9,7 +9,10 @@ ARTICLES_DIR = PROJECT_ROOT / "src" / "content" / "articles"
 METRICS_DIR = PROJECT_ROOT / "src" / "content" / "metrics"
 
 # 順序はキャッシュ安定のため固定
-FEW_SHOT_SLUGS = ["yamamoto-splitter-2026"]
+FEW_SHOT_SLUGS = [
+    "yamamoto-splitter-2026",
+    "imanaga-splitter-2026-04-15",
+]
 
 
 def load_style_guide() -> str:
@@ -91,7 +94,7 @@ def build_user_prompt(
 # 期間
 {start_date} 〜 {end_date}
 
-# 英語での分析 (Gemini Flashが抽出したキーファインディング)
+# 英語での分析 (分析ステップが抽出したキーファインディング)
 {findings}
 
 # 生データサマリ (DuckDBで集計したJSON)
