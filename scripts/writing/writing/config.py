@@ -5,7 +5,6 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class Config:
     anthropic_api_key: str
-    google_api_key: str
     cloudflare_account_id: str
     cloudflare_api_token: str
     d1_database_id: str
@@ -19,7 +18,6 @@ def load_config() -> Config:
         k
         for k in (
             "ANTHROPIC_API_KEY",
-            "GOOGLE_API_KEY",
             "CLOUDFLARE_ACCOUNT_ID",
             "CLOUDFLARE_API_TOKEN",
             "D1_DATABASE_ID",
@@ -34,7 +32,6 @@ def load_config() -> Config:
         )
     return Config(
         anthropic_api_key=os.environ["ANTHROPIC_API_KEY"],
-        google_api_key=os.environ["GOOGLE_API_KEY"],
         cloudflare_account_id=os.environ["CLOUDFLARE_ACCOUNT_ID"],
         cloudflare_api_token=os.environ["CLOUDFLARE_API_TOKEN"],
         d1_database_id=os.environ["D1_DATABASE_ID"],

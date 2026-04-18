@@ -1,6 +1,6 @@
 # 9seki Writing Pipeline
 
-ローカル実行のLLM執筆パイプライン。R2に蓄積されたStatcastデータから、Gemini 2.5 Flash（英語分析）→ Claude Sonnet 4.6（日本語執筆）を経てMDX記事草稿を生成する。
+ローカル実行のLLM執筆パイプライン。R2に蓄積されたStatcastデータから、Claude Sonnet 4.6で英語分析 → 日本語執筆の2ステップを回してMDX記事草稿を生成する。
 
 ## アーキテクチャ
 
@@ -11,7 +11,7 @@ R2 Parquet (DuckDB経由) ─┐
 期間・題材 (引数)         │          │
                          ┘          │
                                     ▼
-                        Gemini 2.5 Flash (英語で分析)
+                   Claude Sonnet 4.6 (英語で分析)
                                     │
                                     ▼
                          英語の bulleted findings
@@ -20,7 +20,7 @@ R2 Parquet (DuckDB経由) ─┐
                     Style Guide + Few-shot (Prompt Cached)
                                     │
                                     ▼
-                        Claude Sonnet 4.6 (日本語執筆)
+                   Claude Sonnet 4.6 (日本語執筆)
                                     │
                                     ▼
                         MDX草稿 (status: draft)
@@ -33,8 +33,7 @@ R2 Parquet (DuckDB経由) ─┐
 
 | 変数 | 用途 |
 |---|---|
-| `ANTHROPIC_API_KEY` | Claude Sonnet (執筆) |
-| `GOOGLE_API_KEY` | Gemini 2.5 Flash (分析) |
+| `ANTHROPIC_API_KEY` | Claude Sonnet 4.6 (分析 + 執筆) |
 | `CLOUDFLARE_ACCOUNT_ID` | R2/D1アクセス |
 | `CLOUDFLARE_API_TOKEN` | D1選手マスタ検索 |
 | `D1_DATABASE_ID` | D1のUUID |
@@ -44,7 +43,6 @@ R2 Parquet (DuckDB経由) ─┐
 APIキーの発行手順:
 
 - **Anthropic**: https://console.anthropic.com/settings/keys
-- **Google (Gemini)**: https://aistudio.google.com/app/apikey
 
 ## セットアップ
 
@@ -117,7 +115,7 @@ uv run --env-file .env python -m writing draft \
 - 題材 (topic)
 - 対象選手 + 役割
 - 期間
-- 英語findings (Gemini Flashの出力)
+- 英語findings (分析ステップの出力)
 - 生統計のJSONサマリ
 - 出力形式の制約（frontmatter必須フィールド、単位、文体）
 
@@ -135,11 +133,11 @@ uv run --env-file .env python -m writing draft \
 
 | Step | Model | 入力 | 出力 | コスト |
 |---|---|---|---|---|
-| Gemini分析 | gemini-2.5-flash | ~5k tok | ~1k tok | ~$0.003 |
-| Claude執筆（初回） | claude-sonnet-4-6 | ~15k tok | ~4k tok | ~$0.105 |
-| Claude執筆（キャッシュ読込時） | claude-sonnet-4-6 | ~15k tok（90%キャッシュ） | ~4k tok | ~$0.070 |
+| 分析 | claude-sonnet-4-6 | ~5k tok | ~1k tok | ~$0.030 |
+| 執筆（初回） | claude-sonnet-4-6 | ~15k tok | ~4k tok | ~$0.105 |
+| 執筆（キャッシュ読込時） | claude-sonnet-4-6 | ~15k tok（90%キャッシュ） | ~4k tok | ~$0.070 |
 
-月30本想定で**$2〜3**程度。
+月30本想定で**$3〜4**程度。分析ステップもClaude Sonnetに寄せた分、深掘り度が明確に上がる。
 
 ## モジュール構成
 
@@ -149,8 +147,8 @@ writing/
 ├── config.py       # 環境変数ロード
 ├── data.py         # D1選手検索 + DuckDB/R2 Parquetクエリ + 集計
 ├── prompts.py      # style-guide + few-shot の読み込み、プロンプト構築
-├── analyze.py      # Gemini Flash (英語分析)
-├── write.py        # Claude Sonnet (日本語執筆、prompt caching有効)
+├── analyze.py      # Claude Sonnet 4.6 (英語分析)
+├── write.py        # Claude Sonnet 4.6 (日本語執筆、prompt caching有効)
 └── commands.py     # draft() オーケストレーション
 ```
 
