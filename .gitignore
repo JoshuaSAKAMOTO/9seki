@@ -34,3 +34,7 @@ __pycache__/
 
 # Private drafts / internal design docs
 docs/drafts/
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
