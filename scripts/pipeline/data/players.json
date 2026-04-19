@@ -62,5 +62,45 @@
     "name_ja_kana": "オカモトカズマ",
     "team_code": "TOR",
     "primary_role": "batter"
+  },
+  {
+    "mlbam_id": 579328,
+    "name_en": "Yusei Kikuchi",
+    "name_ja": "菊池雄星",
+    "name_ja_kana": "キクチユウセイ",
+    "team_code": "LAA",
+    "primary_role": "pitcher"
+  },
+  {
+    "mlbam_id": 608372,
+    "name_en": "Tomoyuki Sugano",
+    "name_ja": "菅野智之",
+    "name_ja_kana": "スガノトモユキ",
+    "team_code": "COL",
+    "primary_role": "pitcher"
+  },
+  {
+    "mlbam_id": 807799,
+    "name_en": "Masataka Yoshida",
+    "name_ja": "吉田正尚",
+    "name_ja_kana": "ヨシダマサタカ",
+    "team_code": "BOS",
+    "primary_role": "batter"
+  },
+  {
+    "mlbam_id": 808963,
+    "name_en": "Roki Sasaki",
+    "name_ja": "佐々木朗希",
+    "name_ja_kana": "ササキロウキ",
+    "team_code": "LAD",
+    "primary_role": "pitcher"
+  },
+  {
+    "mlbam_id": 837227,
+    "name_en": "Tatsuya Imai",
+    "name_ja": "今井達也",
+    "name_ja_kana": "イマイタツヤ",
+    "team_code": "HOU",
+    "primary_role": "pitcher"
   }
 ]
