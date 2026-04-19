@@ -1,0 +1,137 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { api, playerSlug, roleLabel } from "@/lib/api";
+
+const players = await api.listPlayers();
+// 表示順は投手 → 野手 → 二刀流 の優先順位で、各グループ内は日本語名
+const sortOrder = { pitcher: 0, batter: 1, two_way: 2 } as const;
+const sorted = players.sort((a, b) => {
+  const d = sortOrder[a.primary_role] - sortOrder[b.primary_role];
+  if (d !== 0) return d;
+  return a.name_ja.localeCompare(b.name_ja, "ja");
+});
+---
+
+<BaseLayout
+  title="選手一覧"
+  description="球析が追跡している日本人MLB選手の一覧"
+>
+  <section class="header">
+    <h1>選手</h1>
+    <p class="intro">
+      球析が追跡している日本人MLB選手。データは日次で更新。
+    </p>
+  </section>
+
+  <ul class="player-list">
+    {
+      sorted.map((p) => (
+        <li class="player-card" data-role={p.primary_role}>
+          <a href={`/players/${playerSlug(p)}`}>
+            <div class="main">
+              <span class="name-ja">{p.name_ja}</span>
+              <span class="name-en">{p.name_en}</span>
+            </div>
+            <div class="meta">
+              <span class="team num">{p.team_code}</span>
+              <span class="role">{roleLabel(p.primary_role)}</span>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .header {
+    padding: 1rem 0 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1.5rem;
+  }
+
+  .header h1 {
+    font-size: 1.625rem;
+  }
+
+  .intro {
+    margin-top: 0.5rem;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .player-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .player-card a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    color: inherit;
+    transition: border-color 0.15s;
+  }
+
+  .player-card a:hover {
+    border-color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    min-width: 0;
+  }
+
+  .name-ja {
+    font-weight: 700;
+    font-size: 1.0625rem;
+  }
+
+  .name-en {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .team {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .role {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .player-card[data-role="pitcher"] .role {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .player-card[data-role="two_way"] .role {
+    color: #c2410c;
+    border-color: #c2410c;
+  }
+</style>

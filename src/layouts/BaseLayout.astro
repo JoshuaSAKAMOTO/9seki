@@ -28,6 +28,9 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
           <span class="site-title">球析</span>
           <span class="site-subtitle">9seki</span>
         </a>
+        <div class="nav-links">
+          <a href="/players">選手</a>
+        </div>
       </nav>
     </header>
     <main>
@@ -134,6 +137,22 @@ const { title, description = "球析 — 日本語MLBデータ分析メディア
     font-size: 0.75rem;
     color: var(--color-text-muted);
     letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+  }
+
+  .nav-links a {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .nav-links a:hover {
+    color: var(--color-accent);
+    text-decoration: none;
   }
 
   main {
