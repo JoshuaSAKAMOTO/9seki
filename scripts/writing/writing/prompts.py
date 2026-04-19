@@ -64,7 +64,10 @@ def build_system_blocks() -> list[dict]:
         {
             "type": "text",
             "text": combined,
-            "cache_control": {"type": "ephemeral"},
+            # 1h TTLに設定: 連続して複数本を執筆するセッションでの
+            # キャッシュ読み取りを有効化。5min TTL比で書き込み premium
+            # は1.25x→2xに上がるが、1セッション3本以上で元が取れる。
+            "cache_control": {"type": "ephemeral", "ttl": "1h"},
         }
     ]
 

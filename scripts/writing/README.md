@@ -107,8 +107,19 @@ uv run --env-file .env python -m writing draft \
 - style-guide.md を編集していない
 - few-shotリスト (`FEW_SHOT_SLUGS` in `prompts.py`) が変わっていない
 - 該当記事MDXが変わっていない
+- **前回の呼び出しから1時間以内** (cache TTL)
 
 キャッシュ有効時、2本目以降の記事生成でシステムプロンプト分のコストが約10%に圧縮される。
+
+### Cache TTL
+
+システムプロンプトは `ttl: "1h"` で設定している（通常の5分ではなく）。理由:
+
+- 1セッションで複数本の記事を書く想定（例: 週末にまとめて3〜5本）
+- 5分TTLだと記事生成の合間に切れることが多い
+- 書き込みプレミアムは1.25x → 2x に上がるが、**3本以上で元が取れる**
+
+1記事しか書かない運用になるなら `prompts.py` の `cache_control` を `{"type": "ephemeral"}` に戻せば5分TTLに下がる（書き込み1.25x）。
 
 ### ユーザープロンプト
 
@@ -134,10 +145,10 @@ uv run --env-file .env python -m writing draft \
 | Step | Model | 入力 | 出力 | コスト |
 |---|---|---|---|---|
 | 分析 | claude-sonnet-4-6 | ~5k tok | ~1k tok | ~$0.030 |
-| 執筆（初回） | claude-sonnet-4-6 | ~15k tok | ~4k tok | ~$0.105 |
-| 執筆（キャッシュ読込時） | claude-sonnet-4-6 | ~15k tok（90%キャッシュ） | ~4k tok | ~$0.070 |
+| 執筆（cache write、セッション1本目） | claude-sonnet-4-6 | ~15k tok | ~4k tok | ~$0.120 |
+| 執筆（cache read、セッション2本目以降） | claude-sonnet-4-6 | ~15k tok（90%キャッシュ） | ~4k tok | ~$0.070 |
 
-月30本想定で**$3〜4**程度。分析ステップもClaude Sonnetに寄せた分、深掘り度が明確に上がる。
+セッション1本目は2x書き込みプレミアムで若干高いが、2本目以降は約$0.10/記事。3本/セッション × 10セッション/月 = **$3〜4/月**。
 
 ## モジュール構成
 
