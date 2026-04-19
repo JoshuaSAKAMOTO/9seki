@@ -37,6 +37,7 @@ jobs:
           D1_DATABASE_ID: b3b4538f-8ee1-4968-adfe-da3c75c83d3e
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          PAGES_DEPLOY_HOOK_URL: ${{ secrets.PAGES_DEPLOY_HOOK_URL }}
         run: |
           if [ -n "${{ inputs.date }}" ]; then
             uv run python -m pipeline daily --date "${{ inputs.date }}"

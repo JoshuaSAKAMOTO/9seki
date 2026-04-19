@@ -152,3 +152,25 @@ def daily_batch(target_date: date | None = None) -> None:
 
     written = _write_game_logs(d1, df_tracked, tracked_ids)
     print(f"Wrote {written} game log rows to D1")
+
+    if written > 0:
+        _trigger_pages_rebuild()
+
+
+def _trigger_pages_rebuild() -> None:
+    """日次データが入ったら Cloudflare Pages の再ビルドを要求する。
+    PAGES_DEPLOY_HOOK_URL 未設定なら黙ってスキップ、エラー時もパイプライン全体は失敗させない。"""
+    import os
+
+    import httpx
+
+    url = os.environ.get("PAGES_DEPLOY_HOOK_URL")
+    if not url:
+        print("PAGES_DEPLOY_HOOK_URL not set; skipping rebuild trigger.")
+        return
+    try:
+        r = httpx.post(url, timeout=10.0)
+        r.raise_for_status()
+        print(f"Triggered Pages rebuild (status {r.status_code})")
+    except Exception as e:
+        print(f"Pages rebuild trigger failed (non-fatal): {e}")
