@@ -46,5 +46,21 @@
     "name_ja_kana": "センガコウダイ",
     "team_code": "NYM",
     "primary_role": "pitcher"
+  },
+  {
+    "mlbam_id": 808959,
+    "name_en": "Munetaka Murakami",
+    "name_ja": "村上宗隆",
+    "name_ja_kana": "ムラカミムネタカ",
+    "team_code": "CWS",
+    "primary_role": "batter"
+  },
+  {
+    "mlbam_id": 672960,
+    "name_en": "Kazuma Okamoto",
+    "name_ja": "岡本和真",
+    "name_ja_kana": "オカモトカズマ",
+    "team_code": "TOR",
+    "primary_role": "batter"
   }
 ]
