@@ -79,23 +79,23 @@ const formatValue = (v: number) =>
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
+    /* すべての行を同じgridに入れることで、ラベル列・値列が
+       全行で揃う。display:contentsで<li>の箱を消し、3つの子を
+       grid itemとして直接配置。*/
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    row-gap: 0.625rem;
+    column-gap: 0.625rem;
+    font-size: 0.8125rem;
   }
 
   .hbar-row {
-    display: grid;
-    grid-template-columns: 6.5rem 1fr auto;
-    align-items: center;
-    gap: 0.625rem;
-    font-size: 0.8125rem;
+    display: contents;
   }
 
   .hbar-label {
     color: var(--color-text-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
