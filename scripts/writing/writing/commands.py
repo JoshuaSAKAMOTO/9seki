@@ -5,7 +5,7 @@ from pathlib import Path
 
 from slugify import slugify
 
-from writing import analyze, data, prompts, write
+from writing import analyze, data, notify, prompts, write
 from writing.config import load_config
 
 DRAFTS_DIR = prompts.ARTICLES_DIR / "drafts"
@@ -97,4 +97,12 @@ def draft(
 
     output.write_text(mdx, encoding="utf-8")
     print(f"Wrote draft: {output}")
+
+    notify.notify_draft(
+        output_path=output,
+        mdx=mdx,
+        topic=topic,
+        player_name=player["name_ja"],
+    )
+
     return output

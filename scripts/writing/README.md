@@ -39,10 +39,19 @@ R2 Parquet (DuckDB経由) ─┐
 | `D1_DATABASE_ID` | D1のUUID |
 | `R2_ACCESS_KEY_ID` | DuckDBでR2 Parquet読み取り |
 | `R2_SECRET_ACCESS_KEY` | 同上 |
+| `LINE_CHANNEL_TOKEN` | ドラフト完成時のLINE通知用（任意、未設定ならスキップ） |
+| `LINE_USER_ID` | 通知先の自分のLINE User ID（任意） |
 
 APIキーの発行手順:
 
 - **Anthropic**: https://console.anthropic.com/settings/keys
+- **LINE Messaging API**（任意）:
+  1. https://developers.line.biz/console/ で Provider を作成
+  2. その Provider 配下に **Messaging API チャネル** を作成
+  3. チャネル設定の「**Messaging API**」タブ:
+     - **Channel access token (long-lived)** を発行 → `LINE_CHANNEL_TOKEN`
+     - QRコードでBotを自分のLINEで友達追加（push messageは友達にしか送れない）
+     - 「**Your user ID**」欄の値 → `LINE_USER_ID`
 
 ## セットアップ
 
